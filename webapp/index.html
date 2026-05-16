@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Customers Dream</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header" id="header">
+            <button class="header__back hidden" id="btn-back">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <h1 class="header__title" id="header-title">Customers Dream</h1>
+            <div class="header__spacer"></div>
+        </header>
+
+        <!-- Pages -->
+        <main class="content" id="content">
+
+            <!-- LANDING page (first screen) -->
+            <section class="page active" id="page-landing">
+                <div class="hero">
+                    <div class="hero__icon">🚀</div>
+                    <h2 class="hero__title">Customers Dream</h2>
+                    <p class="hero__subtitle">Готовые макеты сайтов для твоего бизнеса</p>
+                </div>
+                <div class="landing-buttons">
+                    <button class="landing-btn" onclick="goToHome()">
+                        <span class="landing-btn__icon">🎨</span>
+                        <span class="landing-btn__text">
+                            <strong>Бизнес-модели</strong>
+                            <small>Смотреть готовые макеты по категориям</small>
+                        </span>
+                        <span class="landing-btn__arrow">›</span>
+                    </button>
+                    <button class="landing-btn" onclick="goToRequest()">
+                        <span class="landing-btn__icon">📝</span>
+                        <span class="landing-btn__text">
+                            <strong>Подать заявку</strong>
+                            <small>Описать свою идею — мы подберём решение</small>
+                        </span>
+                        <span class="landing-btn__arrow">›</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Home page (categories grid) -->
+            <section class="page" id="page-home">
+                <div class="page__header">
+                    <h2 class="page__title">Бизнес-модели</h2>
+                </div>
+                <div class="grid grid--4" id="categories-grid">
+                    <!-- filled by JS -->
+                </div>
+                <div class="nav-bar">
+                    <button class="nav-bar__item active" data-page="home">
+                        <span class="nav-bar__icon">🏠</span>
+                        <span class="nav-bar__label">Каталог</span>
+                    </button>
+                    <button class="nav-bar__item" data-page="favorites">
+                        <span class="nav-bar__icon">❤️</span>
+                        <span class="nav-bar__label">Избранное</span>
+                    </button>
+                    <button class="nav-bar__item" data-page="request">
+                        <span class="nav-bar__icon">📝</span>
+                        <span class="nav-bar__label">Заявка</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Subcategories page -->
+            <section class="page" id="page-subcategories">
+                <div class="page__header">
+                    <h2 class="page__title" id="sub-title">Подкатегории</h2>
+                </div>
+                <div class="list" id="subcategories-list">
+                    <!-- filled by JS -->
+                </div>
+            </section>
+
+            <!-- Mockups page -->
+            <section class="page" id="page-mockups">
+                <div class="page__header">
+                    <h2 class="page__title" id="mockups-title">Макеты</h2>
+                </div>
+                <div class="mockups-grid" id="mockups-list">
+                    <!-- filled by JS -->
+                </div>
+            </section>
+
+            <!-- Mockup detail page -->
+            <section class="page" id="page-mockup-detail">
+                <div class="mockup-detail" id="mockup-detail">
+                    <!-- filled by JS -->
+                </div>
+            </section>
+
+            <!-- Favorites page -->
+            <section class="page" id="page-favorites">
+                <div class="page__header">
+                    <h2 class="page__title">Избранное</h2>
+                </div>
+                <div class="mockups-grid" id="favorites-list">
+                    <!-- filled by JS -->
+                </div>
+                <div class="empty-state hidden" id="favorites-empty">
+                    <span class="empty-state__icon">💔</span>
+                    <p>У тебя пока нет избранных макетов</p>
+                    <button class="btn btn--primary" onclick="navigateTo('home')">Перейти в каталог</button>
+                </div>
+                <div class="nav-bar">
+                    <button class="nav-bar__item" data-page="home">
+                        <span class="nav-bar__icon">🏠</span>
+                        <span class="nav-bar__label">Каталог</span>
+                    </button>
+                    <button class="nav-bar__item active" data-page="favorites">
+                        <span class="nav-bar__icon">❤️</span>
+                        <span class="nav-bar__label">Избранное</span>
+                    </button>
+                    <button class="nav-bar__item" data-page="request">
+                        <span class="nav-bar__icon">📝</span>
+                        <span class="nav-bar__label">Заявка</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Custom Request page -->
+            <section class="page" id="page-request">
+                <div class="request-form">
+                    <p>Опиши бизнес-модель — мы подберём решение или сделаем кастомный макет.</p>
+
+                    <label class="input-label">Тип бизнеса</label>
+                    <input id="request-business" class="input" type="text" placeholder="Например: маркетплейс, казино, ресторан...">
+
+                    <label class="input-label">Описание и фичи</label>
+                    <textarea id="request-features" class="input" rows="3" placeholder="Какой функционал нужен? Личный кабинет, оплата, каталог..."></textarea>
+
+                    <label class="input-label">Бюджет (опционально)</label>
+                    <input id="request-budget" class="input" type="text" placeholder="$500-1000 или 'обсудим'">
+
+                    <label class="input-label">Контакт для связи</label>
+                    <input id="request-contact-info" class="input" type="text" placeholder="@username или номер телефона">
+
+                    <button class="btn btn--primary btn--full" id="btn-send-request" style="margin-top:14px">🚀 Отправить заявку</button>
+                </div>
+            </section>
+
+            <!-- Contact page (about specific mockup) -->
+            <section class="page" id="page-contact">
+                <div class="contact-form">
+                    <div class="contact-form__icon">💬</div>
+                    <h2>Связаться с нами</h2>
+                    <p>Расскажи, какой проект хочешь реализовать — мы свяжемся с тобой.</p>
+                    <textarea id="contact-message" class="input" rows="5" placeholder="Опиши свою идею, бюджет, пожелания..."></textarea>
+                    <button class="btn btn--primary btn--full" id="btn-send-contact">Отправить заявку</button>
+                    <a class="btn btn--outline btn--full" id="btn-manager-link" href="#" target="_blank">Написать менеджеру напрямую</a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>
