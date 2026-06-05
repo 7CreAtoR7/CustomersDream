@@ -33,6 +33,17 @@ def kb_webapp() -> ReplyKeyboardMarkup:
     return kb.as_markup(resize_keyboard=True)
 
 
+def kb_open_app() -> InlineKeyboardMarkup:
+    """Inline-кнопка для прямого открытия Mini App под приветствием."""
+    kb = InlineKeyboardBuilder()
+    kb.button(
+        text="🚀 Открыть приложение",
+        web_app=WebAppInfo(url=settings.webapp_url),
+    )
+    kb.adjust(1)
+    return kb.as_markup()
+
+
 def kb_agreement() -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     kb.button(text="📜 Прочитать соглашение", callback_data=NavCb(to="agreement").pack())

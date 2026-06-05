@@ -51,9 +51,33 @@ class MockupOut(BaseModel):
     price_cents: int | None
     currency: str | None
     features: str | None
+    platform: str | None = None
+    complexity: str | None = None
     is_liked: bool = False
     category_name: str | None = None
     subcategory_name: str | None = None
+
+
+def _mockup_to_out(m: "Mockup", liked: bool = False) -> "MockupOut":
+    photo_url = m.image_url or (f"/api/photo/{m.photo_file_id}" if m.photo_file_id else None)
+    sub = m.subcategory
+    cat = sub.category if sub else None
+    return MockupOut(
+        id=m.id,
+        title=m.title,
+        description=m.description,
+        photo_file_id=m.photo_file_id,
+        photo_url=photo_url,
+        figma_link=m.figma_link,
+        price_cents=m.price_cents,
+        currency=m.currency,
+        features=m.features,
+        platform=m.platform,
+        complexity=m.complexity,
+        is_liked=liked,
+        category_name=cat.name if cat else None,
+        subcategory_name=sub.name if sub else None,
+    )
 
 class LikeResponse(BaseModel):
     liked: bool
@@ -127,37 +151,52 @@ async def get_mockups(
     )
     mockups = result.scalars().all()
 
-    out = []
-    for m in mockups:
-        liked = False
-        if user_id:
-            like_result = await session.execute(
-                select(Like.id).where(Like.user_id == user_id, Like.mockup_id == m.id)
-            )
-            liked = like_result.scalar_one_or_none() is not None
+    liked_ids = set()
+    if user_id:
+        like_rows = await session.execute(
+            select(Like.mockup_id).where(Like.user_id == user_id)
+        )
+        liked_ids = set(like_rows.scalars().all())
 
-        photo_url = None
-        if m.photo_file_id:
-            photo_url = f"/api/photo/{m.photo_file_id}"
+    return [_mockup_to_out(m, m.id in liked_ids) for m in mockups]
 
-        sub = m.subcategory
-        cat = sub.category if sub else None
 
-        out.append(MockupOut(
-            id=m.id,
-            title=m.title,
-            description=m.description,
-            photo_file_id=m.photo_file_id,
-            photo_url=photo_url,
-            figma_link=m.figma_link,
-            price_cents=m.price_cents,
-            currency=m.currency,
-            features=m.features,
-            is_liked=liked,
-            category_name=cat.name if cat else None,
-            subcategory_name=sub.name if sub else None,
-        ))
-    return out
+@router.get("/mockups/all", response_model=list[MockupOut])
+async def get_all_mockups(
+    user_id: int = Query(0),
+    platform: Optional[str] = Query(None),
+    complexity: Optional[str] = Query(None),
+    price_min: Optional[int] = Query(None),
+    price_max: Optional[int] = Query(None),
+    session: AsyncSession = Depends(get_session),
+):
+    """Flat list of all mockups with optional filters (for filter chips)."""
+    query = (
+        select(Mockup)
+        .where(Mockup.is_active.is_(True))
+        .order_by(Mockup.position, Mockup.id)
+        .options(selectinload(Mockup.subcategory).selectinload(Subcategory.category))
+    )
+    if platform:
+        query = query.where(Mockup.platform == platform)
+    if complexity:
+        query = query.where(Mockup.complexity == complexity)
+    if price_min is not None:
+        query = query.where(Mockup.price_cents >= price_min)
+    if price_max is not None:
+        query = query.where(Mockup.price_cents <= price_max)
+
+    result = await session.execute(query)
+    mockups = result.scalars().all()
+
+    liked_ids = set()
+    if user_id:
+        like_rows = await session.execute(
+            select(Like.mockup_id).where(Like.user_id == user_id)
+        )
+        liked_ids = set(like_rows.scalars().all())
+
+    return [_mockup_to_out(m, m.id in liked_ids) for m in mockups]
 
 
 @router.get("/mockups/{mockup_id}", response_model=MockupOut)
@@ -182,24 +221,7 @@ async def get_mockup(
         )
         liked = like_result.scalar_one_or_none() is not None
 
-    photo_url = f"/api/photo/{m.photo_file_id}" if m.photo_file_id else None
-    sub = m.subcategory
-    cat = sub.category if sub else None
-
-    return MockupOut(
-        id=m.id,
-        title=m.title,
-        description=m.description,
-        photo_file_id=m.photo_file_id,
-        photo_url=photo_url,
-        figma_link=m.figma_link,
-        price_cents=m.price_cents,
-        currency=m.currency,
-        features=m.features,
-        is_liked=liked,
-        category_name=cat.name if cat else None,
-        subcategory_name=sub.name if sub else None,
-    )
+    return _mockup_to_out(m, liked)
 
 
 @router.post("/like/{mockup_id}", response_model=LikeResponse)
@@ -216,6 +238,14 @@ async def toggle_like(
         await session.delete(like)
         await session.commit()
         return LikeResponse(liked=False)
+
+    # Ensure the user row exists to satisfy the FK constraint (the Mini App may
+    # call /like before /user/init has completed).
+    user = await session.get(User, user_id)
+    if user is None:
+        session.add(User(id=user_id, agreed_to_terms=True))
+        await session.flush()
+
     session.add(Like(user_id=user_id, mockup_id=mockup_id))
     await session.commit()
     return LikeResponse(liked=True)
@@ -234,26 +264,7 @@ async def get_favorites(
         .options(selectinload(Mockup.subcategory).selectinload(Subcategory.category))
     )
     mockups = result.scalars().all()
-    out = []
-    for m in mockups:
-        photo_url = f"/api/photo/{m.photo_file_id}" if m.photo_file_id else None
-        sub = m.subcategory
-        cat = sub.category if sub else None
-        out.append(MockupOut(
-            id=m.id,
-            title=m.title,
-            description=m.description,
-            photo_file_id=m.photo_file_id,
-            photo_url=photo_url,
-            figma_link=m.figma_link,
-            price_cents=m.price_cents,
-            currency=m.currency,
-            features=m.features,
-            is_liked=True,
-            category_name=cat.name if cat else None,
-            subcategory_name=sub.name if sub else None,
-        ))
-    return out
+    return [_mockup_to_out(m, True) for m in mockups]
 
 
 @router.post("/contact", response_model=ContactOut)
@@ -262,6 +273,14 @@ async def create_contact(
     user_id: int = Query(...),
     session: AsyncSession = Depends(get_session),
 ):
+    # Make sure the user exists to satisfy the FK constraint (e.g. if /user/init
+    # never completed or the Mini App is opened without Telegram init data).
+    user = await session.get(User, user_id)
+    if user is None:
+        user = User(id=user_id, agreed_to_terms=True)
+        session.add(user)
+        await session.flush()
+
     req = ContactRequest(
         user_id=user_id,
         mockup_id=body.mockup_id,
@@ -311,6 +330,16 @@ async def _notify_admin(session: AsyncSession, req: ContactRequest, user_id: int
                 })
     except Exception:
         pass
+
+
+@router.get("/config")
+async def get_public_config():
+    """Return non-sensitive config for the Mini App frontend."""
+    from bot.config import settings
+    return {
+        "crypto_usdt_trc20": settings.crypto_usdt_trc20 or "",
+        "manager_username": settings.manager_username or "",
+    }
 
 
 @router.post("/user/init")

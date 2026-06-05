@@ -114,6 +114,8 @@ class Mockup(Base):
 
     # Telegram file_id фотографии-скриншота макета (предпочтительно)
     photo_file_id: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    # Статичный URL картинки-превью (например, /assets/mockups/products/...png)
+    image_url: Mapped[Optional[str]] = mapped_column(String(512), nullable=True)
     # Опциональная ссылка на Figma (только просмотр)
     figma_link: Mapped[Optional[str]] = mapped_column(String(512), nullable=True)
 
@@ -122,6 +124,11 @@ class Mockup(Base):
     currency: Mapped[Optional[str]] = mapped_column(String(8), nullable=True)
     # Список фич, разделенный переносами строк
     features: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    # Платформа: site / bot / app (для фильтров)
+    platform: Mapped[Optional[str]] = mapped_column(String(16), nullable=True)
+    # Сложность бизнеса: simple / medium / complex (для фильтров)
+    complexity: Mapped[Optional[str]] = mapped_column(String(16), nullable=True)
 
     position: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)

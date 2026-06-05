@@ -14,6 +14,7 @@ from bot.keyboards.user_kb import (
     kb_agreement_full,
     kb_back_to_menu,
     kb_main_menu,
+    kb_open_app,
     kb_webapp,
 )
 from bot.services import crud
@@ -55,7 +56,7 @@ async def cmd_start(message: Message, state: FSMContext, session: AsyncSession) 
         await message.answer(texts.AGREEMENT_INTRO, reply_markup=kb_agreement())
         return
 
-    await message.answer(texts.WELCOME, reply_markup=kb_webapp())
+    await message.answer(texts.WELCOME, reply_markup=kb_open_app())
 
 
 @router.callback_query(NavCb.filter(F.to == "agreement"))
@@ -88,9 +89,9 @@ async def cb_agree(callback: CallbackQuery, session: AsyncSession) -> None:
         await crud.set_user_agreed(session, user)
     await callback.answer("Спасибо! Соглашение принято ✅", show_alert=False)
     try:
-        await callback.message.edit_text(texts.MAIN_MENU, reply_markup=kb_main_menu())
+        await callback.message.edit_text(texts.WELCOME, reply_markup=kb_open_app())
     except Exception:
-        await callback.message.answer(texts.MAIN_MENU, reply_markup=kb_main_menu())
+        await callback.message.answer(texts.WELCOME, reply_markup=kb_open_app())
 
 
 @router.callback_query(NavCb.filter(F.to == "menu"))

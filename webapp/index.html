@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -9,160 +9,269 @@
 </head>
 <body>
     <div id="app">
-        <!-- Header -->
         <header class="header" id="header">
             <button class="header__back hidden" id="btn-back">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </button>
-            <h1 class="header__title" id="header-title">Customers Dream</h1>
+            <h1 class="header__title gradient-text" id="header-title">Customers Dream</h1>
             <div class="header__spacer"></div>
         </header>
 
-        <!-- Pages -->
         <main class="content" id="content">
 
-            <!-- LANDING page (first screen) -->
-            <section class="page active" id="page-landing">
-                <div class="hero">
-                    <div class="hero__icon">🚀</div>
-                    <h2 class="hero__title">Customers Dream</h2>
-                    <p class="hero__subtitle">Готовые макеты сайтов для твоего бизнеса</p>
+            <!-- HOME: landing -->
+            <section class="page active" id="page-home-landing">
+                <!-- Banner carousel -->
+                <div class="banner" id="banner">
+                    <div class="banner__track" id="banner-track"></div>
+                    <div class="banner__dots" id="banner-dots"></div>
                 </div>
+
                 <div class="landing-buttons">
-                    <button class="landing-btn" onclick="goToHome()">
-                        <span class="landing-btn__icon">🎨</span>
-                        <span class="landing-btn__text">
-                            <strong>Бизнес-модели</strong>
-                            <small>Смотреть готовые макеты по категориям</small>
+                    <button class="landing-btn landing-btn--catalog" id="btn-go-catalog">
+                        <span class="landing-btn__icon">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="2.2" stroke="currentColor" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="2.2" stroke="currentColor" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="2.2" stroke="currentColor" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="2.2" stroke="currentColor" stroke-width="2"/></svg>
                         </span>
-                        <span class="landing-btn__arrow">›</span>
-                    </button>
-                    <button class="landing-btn" onclick="goToRequest()">
-                        <span class="landing-btn__icon">📝</span>
                         <span class="landing-btn__text">
-                            <strong>Подать заявку</strong>
-                            <small>Описать свою идею — мы подберём решение</small>
+                            <strong>Каталог</strong>
+                            <small>Готовые макеты по категориям</small>
                         </span>
-                        <span class="landing-btn__arrow">›</span>
+                        <span class="landing-btn__arrow">→</span>
                     </button>
+                    <button class="landing-btn landing-btn--custom" id="btn-go-custom">
+                        <span class="landing-btn__icon">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M8 9l3 3-3 3M13 15h3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="4" width="18" height="16" rx="3" stroke="currentColor" stroke-width="2"/></svg>
+                        </span>
+                        <span class="landing-btn__text">
+                            <strong>Мои проекты</strong>
+                            <small>Индивидуальная разработка под тебя</small>
+                        </span>
+                        <span class="landing-btn__arrow">→</span>
+                    </button>
+                </div>
+
+                <div class="home-stats">
+                    <div class="home-stat">
+                        <div class="home-stat__value gradient-text" id="home-stat-mockups">—</div>
+                        <div class="home-stat__label">макетов</div>
+                    </div>
+                    <div class="home-stat">
+                        <div class="home-stat__value gradient-text" id="home-stat-cats">—</div>
+                        <div class="home-stat__label">категорий</div>
+                    </div>
+                    <div class="home-stat">
+                        <div class="home-stat__value gradient-text">24/7</div>
+                        <div class="home-stat__label">поддержка</div>
+                    </div>
                 </div>
             </section>
 
-            <!-- Home page (categories grid) -->
-            <section class="page" id="page-home">
-                <div class="page__header">
-                    <h2 class="page__title">Бизнес-модели</h2>
+            <!-- Catalog -->
+            <section class="page" id="page-catalog">
+                <div class="filters" id="filters-bar">
+                    <button class="chip" data-group="platform" data-value="">Все</button>
+                    <button class="chip" data-group="platform" data-value="site">🌐 Сайты</button>
+                    <button class="chip" data-group="platform" data-value="bot">🤖 Боты</button>
+                    <button class="chip" data-group="platform" data-value="app">📱 Приложения</button>
+                    <button class="chip" data-group="complexity" data-value="simple">⚡ Простые</button>
+                    <button class="chip" data-group="complexity" data-value="medium">🔧 Средние</button>
+                    <button class="chip" data-group="complexity" data-value="complex">🚀 Сложные</button>
+                    <button class="chip" data-group="price" data-value="0-100000">💸 до $1000</button>
+                    <button class="chip" data-group="price" data-value="100000-250000">💰 $1000–2500</button>
+                    <button class="chip" data-group="price" data-value="250000-99999999">💎 $2500+</button>
                 </div>
-                <div class="grid grid--4" id="categories-grid">
-                    <!-- filled by JS -->
-                </div>
-                <div class="nav-bar">
-                    <button class="nav-bar__item active" data-page="home">
-                        <span class="nav-bar__icon">🏠</span>
-                        <span class="nav-bar__label">Каталог</span>
-                    </button>
-                    <button class="nav-bar__item" data-page="favorites">
-                        <span class="nav-bar__icon">❤️</span>
-                        <span class="nav-bar__label">Избранное</span>
-                    </button>
-                    <button class="nav-bar__item" data-page="request">
-                        <span class="nav-bar__icon">📝</span>
-                        <span class="nav-bar__label">Заявка</span>
-                    </button>
-                </div>
+                <div class="grid" id="categories-grid"></div>
+                <div class="mockups-grid hidden" id="filtered-mockups"></div>
             </section>
 
-            <!-- Subcategories page -->
+            <!-- Subcategories -->
             <section class="page" id="page-subcategories">
-                <div class="page__header">
-                    <h2 class="page__title" id="sub-title">Подкатегории</h2>
-                </div>
-                <div class="list" id="subcategories-list">
-                    <!-- filled by JS -->
-                </div>
+                <div class="list" id="subcategories-list"></div>
             </section>
 
-            <!-- Mockups page -->
+            <!-- Mockups list -->
             <section class="page" id="page-mockups">
-                <div class="page__header">
-                    <h2 class="page__title" id="mockups-title">Макеты</h2>
-                </div>
-                <div class="mockups-grid" id="mockups-list">
-                    <!-- filled by JS -->
-                </div>
+                <div class="mockups-grid" id="mockups-list"></div>
             </section>
 
-            <!-- Mockup detail page -->
+            <!-- Mockup detail -->
             <section class="page" id="page-mockup-detail">
-                <div class="mockup-detail" id="mockup-detail">
-                    <!-- filled by JS -->
-                </div>
+                <div class="mockup-detail" id="mockup-detail"></div>
             </section>
 
-            <!-- Favorites page -->
+            <!-- Favorites -->
             <section class="page" id="page-favorites">
-                <div class="page__header">
-                    <h2 class="page__title">Избранное</h2>
-                </div>
-                <div class="mockups-grid" id="favorites-list">
-                    <!-- filled by JS -->
-                </div>
+                <div class="mockups-grid" id="favorites-list"></div>
                 <div class="empty-state hidden" id="favorites-empty">
-                    <span class="empty-state__icon">💔</span>
-                    <p>У тебя пока нет избранных макетов</p>
-                    <button class="btn btn--primary" onclick="navigateTo('home')">Перейти в каталог</button>
-                </div>
-                <div class="nav-bar">
-                    <button class="nav-bar__item" data-page="home">
-                        <span class="nav-bar__icon">🏠</span>
-                        <span class="nav-bar__label">Каталог</span>
-                    </button>
-                    <button class="nav-bar__item active" data-page="favorites">
-                        <span class="nav-bar__icon">❤️</span>
-                        <span class="nav-bar__label">Избранное</span>
-                    </button>
-                    <button class="nav-bar__item" data-page="request">
-                        <span class="nav-bar__icon">📝</span>
-                        <span class="nav-bar__label">Заявка</span>
-                    </button>
+                    <div class="empty-state__icon">💔</div>
+                    <p>Пока ничего не добавлено</p>
+                    <button class="btn btn--primary" onclick="showCatalog()">Перейти в каталог</button>
                 </div>
             </section>
 
-            <!-- Custom Request page -->
+            <!-- Chat -->
+            <section class="page" id="page-chat">
+                <div class="chat-page">
+                    <div class="chat-page__icon">💬</div>
+                    <p id="chat-desc">Задай вопрос или опиши идею — наш менеджер свяжется с тобой в Telegram.</p>
+                    <textarea id="chat-message" class="input" rows="4" placeholder="Напиши сообщение..."></textarea>
+                    <button class="btn btn--primary btn--full" id="btn-send-chat">Отправить</button>
+                </div>
+            </section>
+
+            <!-- Profile -->
+            <section class="page" id="page-profile">
+                <div class="profile-page">
+                    <div class="profile-card">
+                        <div class="profile-card__avatar">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="profile-card__info">
+                            <div class="profile-card__name" id="profile-name">User</div>
+                            <div class="profile-card__id" id="profile-id">ID: —</div>
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <h3 class="profile-section__title">Баланс</h3>
+                        <div class="balance-card">
+                            <div>
+                                <div class="balance-card__amount gradient-text" id="profile-balance">$0.00</div>
+                                <div class="balance-card__sub">Доступно к оплате</div>
+                            </div>
+                            <button class="btn btn--primary btn--sm" id="btn-topup">Пополнить</button>
+                        </div>
+                        <div class="crypto-card hidden" id="topup-section">
+                            <div class="crypto-card__row">
+                                <span class="crypto-card__label">USDT · TRC20</span>
+                                <button class="crypto-card__copy" id="btn-copy-crypto">Копировать</button>
+                            </div>
+                            <div class="crypto-card__address" id="crypto-address">—</div>
+                            <p class="crypto-card__note">Отправь USDT на адрес и напиши менеджеру для зачисления.</p>
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <h3 class="profile-section__title">Реферальная программа</h3>
+                        <div class="referral-card">
+                            <p class="referral-card__text">Приглашай друзей и получай бонусы на баланс</p>
+                            <div class="referral-card__link" id="referral-link">—</div>
+                            <button class="btn btn--ghost btn--full btn--sm" id="btn-copy-ref">Скопировать ссылку</button>
+                            <div class="referral-card__stats">
+                                <div class="referral-card__stat"><span class="referral-card__stat-value" id="ref-count">0</span><span class="referral-card__stat-label">друзей</span></div>
+                                <div class="referral-card__stat"><span class="referral-card__stat-value" id="ref-earned">$0</span><span class="referral-card__stat-label">заработано</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <h3 class="profile-section__title">Настройки</h3>
+                        <div class="menu">
+                            <button class="menu__item" id="menu-favorites">
+                                <span class="menu__icon">❤️</span>
+                                <span class="menu__label">Избранное</span>
+                                <span class="menu__arrow">›</span>
+                            </button>
+                            <button class="menu__item" id="menu-chat">
+                                <span class="menu__icon">💬</span>
+                                <span class="menu__label">Чат с менеджером</span>
+                                <span class="menu__arrow">›</span>
+                            </button>
+                            <div class="menu__item menu__item--toggle">
+                                <span class="menu__icon">🌐</span>
+                                <span class="menu__label">Язык</span>
+                                <div class="seg" id="seg-lang">
+                                    <button class="seg__btn active" data-lang="ru">RU</button>
+                                    <button class="seg__btn" data-lang="en">EN</button>
+                                </div>
+                            </div>
+                            <div class="menu__item menu__item--toggle">
+                                <span class="menu__icon">🎨</span>
+                                <span class="menu__label">Тема</span>
+                                <div class="seg" id="seg-theme">
+                                    <button class="seg__btn active" data-theme="dark">Тёмная</button>
+                                    <button class="seg__btn" data-theme="light">Светлая</button>
+                                </div>
+                            </div>
+                            <button class="menu__item" id="menu-terms">
+                                <span class="menu__icon">📄</span>
+                                <span class="menu__label">Правила использования</span>
+                                <span class="menu__arrow">›</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Terms -->
+            <section class="page" id="page-terms">
+                <div class="terms">
+                    <div class="terms__block">
+                        <h3>1. Что мы предоставляем</h3>
+                        <p>Customers Dream предоставляет готовые макеты сайтов, шаблоны и кодовую базу для запуска бизнеса. Это цифровой продукт «как есть».</p>
+                    </div>
+                    <div class="terms__block">
+                        <h3>2. Ответственность</h3>
+                        <p>Мы передаём только дизайн и кодовую базу. Мы <b>не несём ответственности</b> за дальнейшую эксплуатацию, контент, законность и работу запущенного на основе макета сайта или сервиса.</p>
+                    </div>
+                    <div class="terms__block">
+                        <h3>3. Обязанности покупателя</h3>
+                        <p>Покупатель самостоятельно и полностью берёт на себя юридическую ответственность за использование продукта, соблюдение законов своей юрисдикции, лицензирование (включая, но не ограничиваясь, гемблинг, финансы, крипту) и любые последствия работы своего проекта.</p>
+                    </div>
+                    <div class="terms__block">
+                        <h3>4. Отказ от гарантий</h3>
+                        <p>Мы не гарантируем прибыль и не сопровождаем проект после передачи, если иное не оговорено отдельно.</p>
+                    </div>
+                    <p class="terms__accept">Покупая продукт, вы соглашаетесь с этими условиями.</p>
+                </div>
+            </section>
+
+            <!-- Custom Dev / Мои проекты -->
             <section class="page" id="page-request">
                 <div class="request-form">
-                    <p>Опиши бизнес-модель — мы подберём решение или сделаем кастомный макет.</p>
-
+                    <p>Опиши бизнес-модель — подберём решение или сделаем под тебя.</p>
                     <label class="input-label">Тип бизнеса</label>
-                    <input id="request-business" class="input" type="text" placeholder="Например: маркетплейс, казино, ресторан...">
-
+                    <input id="request-business" class="input" type="text" placeholder="Маркетплейс, казино, ресторан...">
                     <label class="input-label">Описание и фичи</label>
-                    <textarea id="request-features" class="input" rows="3" placeholder="Какой функционал нужен? Личный кабинет, оплата, каталог..."></textarea>
-
-                    <label class="input-label">Бюджет (опционально)</label>
+                    <textarea id="request-features" class="input" rows="3" placeholder="Какой функционал нужен?"></textarea>
+                    <label class="input-label">Бюджет</label>
                     <input id="request-budget" class="input" type="text" placeholder="$500-1000 или 'обсудим'">
-
-                    <label class="input-label">Контакт для связи</label>
-                    <input id="request-contact-info" class="input" type="text" placeholder="@username или номер телефона">
-
-                    <button class="btn btn--primary btn--full" id="btn-send-request" style="margin-top:14px">🚀 Отправить заявку</button>
+                    <label class="input-label">Контакт</label>
+                    <input id="request-contact-info" class="input" type="text" placeholder="@username или номер">
+                    <button class="btn btn--primary btn--full" id="btn-send-request" style="margin-top:14px">Отправить заявку</button>
                 </div>
             </section>
 
-            <!-- Contact page (about specific mockup) -->
+            <!-- Contact -->
             <section class="page" id="page-contact">
                 <div class="contact-form">
-                    <div class="contact-form__icon">💬</div>
-                    <h2>Связаться с нами</h2>
-                    <p>Расскажи, какой проект хочешь реализовать — мы свяжемся с тобой.</p>
-                    <textarea id="contact-message" class="input" rows="5" placeholder="Опиши свою идею, бюджет, пожелания..."></textarea>
-                    <button class="btn btn--primary btn--full" id="btn-send-contact">Отправить заявку</button>
-                    <a class="btn btn--outline btn--full" id="btn-manager-link" href="#" target="_blank">Написать менеджеру напрямую</a>
+                    <p id="contact-desc">Расскажи детали — наш менеджер свяжется с тобой в Telegram.</p>
+                    <textarea id="contact-message" class="input" rows="5" placeholder="Идея, бюджет, пожелания..."></textarea>
+                    <button class="btn btn--primary btn--full" id="btn-send-contact">Отправить</button>
                 </div>
             </section>
         </main>
+
+        <nav class="nav-bar" id="nav-bar">
+            <button class="nav-bar__item active" data-tab="home">
+                <svg class="nav-bar__svg" viewBox="0 0 24 24" fill="none"><path d="M3 12l9-8 9 8M5 10v8a2 2 0 002 2h10a2 2 0 002-2v-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span class="nav-bar__label">Главная</span>
+            </button>
+            <button class="nav-bar__item" data-tab="favorites">
+                <svg class="nav-bar__svg" viewBox="0 0 24 24" fill="none"><path d="M12 21s-9-5.5-9-12.5C3 5.42 5.42 3 8.5 3c1.74 0 3.41.81 3.5 2 .09-1.19 1.76-2 3.5-2C18.58 3 21 5.42 21 8.5c0 7-9 12.5-9 12.5z" stroke="currentColor" stroke-width="2"/></svg>
+                <span class="nav-bar__label">Избранное</span>
+            </button>
+            <button class="nav-bar__item" data-tab="chat">
+                <svg class="nav-bar__svg" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z" stroke="currentColor" stroke-width="2"/></svg>
+                <span class="nav-bar__label">Чат</span>
+            </button>
+            <button class="nav-bar__item" data-tab="profile">
+                <svg class="nav-bar__svg" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                <span class="nav-bar__label">Профиль</span>
+            </button>
+        </nav>
     </div>
 
     <script src="/js/app.js"></script>

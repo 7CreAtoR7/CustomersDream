@@ -1,0 +1,20 @@
+[Unit]
+Description=CustomersDream Telegram bot + Mini App
+After=network.target
+
+[Service]
+Type=simple
+# Папка с проектом на сервере
+WorkingDirectory=/opt/CustomersDream
+# Запуск через python из виртуального окружения
+ExecStart=/opt/CustomersDream/venv/bin/python run_prod.py
+# Если процесс упал — systemd сам перезапустит (24/7)
+Restart=always
+RestartSec=5
+# Логи пишутся в journald (смотреть: journalctl -u customersdream -f)
+StandardOutput=journal
+StandardError=journal
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
