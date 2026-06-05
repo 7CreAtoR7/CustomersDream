@@ -383,6 +383,11 @@ body {
 .nav-bar__svg { width: 22px; height: 22px; }
 .nav-bar__label { font-size: 10px; font-weight: 700; }
 
+/* When a text field is focused (mobile keyboard open) hide the bottom nav so it
+   doesn't float above the keyboard and cover the submit button. */
+body.keyboard-open .nav-bar { display: none; }
+body.keyboard-open .page { padding-bottom: 16px; }
+
 /* === Page header === */
 .page__header { margin-bottom: 14px; }
 .page__title { font-size: 19px; font-weight: 800; letter-spacing: -0.02em; }

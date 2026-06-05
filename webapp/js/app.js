@@ -585,7 +585,7 @@ function setupProfile() {
     else if (userInfo.username) nameEl.textContent = `@${userInfo.username}`;
     if (userId) {
         document.getElementById('profile-id').textContent = `ID: ${userId}`;
-        document.getElementById('referral-link').textContent = `https://t.me/CustomersDream_bot?start=ref_${userId}`;
+        document.getElementById('referral-link').textContent = `https://t.me/customers_dream_bot?start=ref_${userId}`;
     }
     fetch(`${API}/config`).then(r => r.json()).then(cfg => {
         document.getElementById('crypto-address').textContent = cfg.crypto_usdt_trc20 || 'Уточните у менеджера';
@@ -690,6 +690,15 @@ document.getElementById('btn-back').addEventListener('click', goBack);
 document.getElementById('btn-go-catalog').addEventListener('click', showCatalog);
 document.getElementById('btn-go-custom').addEventListener('click', () => showCustomDev(''));
 document.querySelectorAll('.nav-bar__item').forEach(item => item.addEventListener('click', () => switchTab(item.dataset.tab)));
+
+// Hide bottom nav while typing so the on-screen keyboard doesn't push it over
+// the submit button on chat/contact/request screens.
+document.addEventListener('focusin', (e) => {
+    if (e.target.matches('input, textarea')) document.body.classList.add('keyboard-open');
+});
+document.addEventListener('focusout', (e) => {
+    if (e.target.matches('input, textarea')) document.body.classList.remove('keyboard-open');
+});
 
 applyTheme(localStorage.getItem('cd_theme') || 'dark');
 applyLang(lang);
