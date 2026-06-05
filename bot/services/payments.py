@@ -47,11 +47,12 @@ def crypto_payment_text(plan: InvoicePlan) -> Optional[str]:
         return None
     amount = plan.amount_cents / 100
     return (
-        f"💱 <b>Оплата криптой (USDT TRC20)</b>\n\n"
+        f"💱 <b>Оплата криптой (USDT в сети TON)</b>\n\n"
         f"Заказ: <b>{plan.title}</b>\n"
         f"Сумма: <b>{amount:.2f} {plan.currency}</b> "
         f"(уточните курс USDT у менеджера)\n\n"
-        f"Кошелёк (TRC20):\n<code>{settings.crypto_usdt_trc20}</code>\n\n"
+        f"Кошелёк (сеть TON):\n<code>{settings.crypto_usdt_trc20}</code>\n\n"
+        "⚠️ Отправляйте только USDT в сети TON (не TRC20/Tron).\n\n"
         "После оплаты пришлите hash транзакции — менеджер сверит и подтвердит."
     )
 
