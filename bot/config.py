@@ -48,5 +48,11 @@ class Settings(BaseSettings):
     def is_admin(self, user_id: int) -> bool:
         return user_id in self.admin_ids
 
+    @property
+    def manager_usernames(self) -> List[str]:
+        """Список юзернеймов менеджеров (без @). Поддерживает запись через запятую."""
+        raw = self.manager_username or ""
+        return [u.strip().lstrip("@") for u in raw.split(",") if u.strip()]
+
 
 settings = Settings()  # type: ignore[call-arg]

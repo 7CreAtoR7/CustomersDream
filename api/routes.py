@@ -336,9 +336,11 @@ async def _notify_admin(session: AsyncSession, req: ContactRequest, user_id: int
 async def get_public_config():
     """Return non-sensitive config for the Mini App frontend."""
     from bot.config import settings
+    managers = settings.manager_usernames
     return {
         "crypto_usdt_trc20": settings.crypto_usdt_trc20 or "",
-        "manager_username": settings.manager_username or "",
+        "manager_username": managers[0] if managers else "",
+        "manager_usernames": managers,
     }
 
 

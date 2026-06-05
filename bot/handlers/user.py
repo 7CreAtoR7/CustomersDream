@@ -396,12 +396,12 @@ async def cb_contact(
     try:
         await callback.message.edit_text(
             texts.CONTACT_PROMPT,
-            reply_markup=kb_contact_manager(settings.manager_username),
+            reply_markup=kb_contact_manager(settings.manager_usernames),
         )
     except Exception:
         await callback.message.answer(
             texts.CONTACT_PROMPT,
-            reply_markup=kb_contact_manager(settings.manager_username),
+            reply_markup=kb_contact_manager(settings.manager_usernames),
         )
     await callback.answer()
 
@@ -429,7 +429,7 @@ async def cb_contact_about_mockup(
         "ссылку на макет и свяжется с тобой."
     )
     await callback.message.answer(
-        text, reply_markup=kb_contact_manager(settings.manager_username)
+        text, reply_markup=kb_contact_manager(settings.manager_usernames)
     )
     await callback.answer()
 
@@ -451,9 +451,12 @@ async def msg_contact_text(
     )
     await state.clear()
 
+    managers = settings.manager_usernames
     user_text = (
-        texts.CONTACT_DONE.format(manager=f"@{settings.manager_username}")
-        if settings.manager_username
+        texts.CONTACT_DONE.format(
+            manager=", ".join(f"@{u}" for u in managers)
+        )
+        if managers
         else texts.CONTACT_NO_MANAGER
     )
     await message.answer(user_text, reply_markup=kb_main_menu())

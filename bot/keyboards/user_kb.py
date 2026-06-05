@@ -151,11 +151,24 @@ def kb_back_to_menu() -> InlineKeyboardMarkup:
     return kb.as_markup()
 
 
-def kb_contact_manager(manager_username: Optional[str]) -> InlineKeyboardMarkup:
+def kb_contact_manager(managers: Optional[object] = None) -> InlineKeyboardMarkup:
+    """Кнопка(и) для связи с менеджером.
+
+    Принимает либо строку (один юзернейм / список через запятую),
+    либо готовый список юзернеймов.
+    """
+    if managers is None:
+        usernames: list[str] = []
+    elif isinstance(managers, str):
+        usernames = [u.strip().lstrip("@") for u in managers.split(",") if u.strip()]
+    else:
+        usernames = [str(u).strip().lstrip("@") for u in managers if str(u).strip()]
+
     kb = InlineKeyboardBuilder()
-    if manager_username:
-        url = f"https://t.me/{manager_username.lstrip('@')}"
-        kb.button(text="✍️ Написать менеджеру", url=url)
+    multiple = len(usernames) > 1
+    for username in usernames:
+        text = f"✍️ Написать @{username}" if multiple else "✍️ Написать менеджеру"
+        kb.button(text=text, url=f"https://t.me/{username}")
     kb.button(text="🏠 В меню", callback_data=NavCb(to="menu").pack())
     kb.adjust(1)
     return kb.as_markup()
